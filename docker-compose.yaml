@@ -1,0 +1,9 @@
+services:
+  frontend_dev:
+    build: ./frontend
+    profiles: [dev]
+    volumes:
+      - ./frontend:/workspace
+      - vscode:/root/.vscode-server
+volumes:
+  vscode:
