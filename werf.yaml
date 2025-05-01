@@ -1,0 +1,21 @@
+project: ceps
+configVersion: 1
+---
+image: frontend_dev
+from: python:3.12-slim
+docker:
+  CMD: ["sleep", "infinity"]
+  EXPOSE: ["8080"]
+  WORKDIR: /workspace
+git:
+  - add: /frontend/requirements.txt
+    to: /requirements.txt
+    stageDependencies:
+      install:
+       - requirements.txt
+shell:
+  beforeInstall:
+  - apt update
+  - apt install -y git
+  install:
+  - pip install -r requirements.txt --root-user-action ignore

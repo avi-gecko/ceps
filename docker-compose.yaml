@@ -1,9 +1,12 @@
 services:
   frontend_dev:
-    build: ./frontend
+    image: $WERF_FRONTEND_DEV_DOCKER_IMAGE_NAME
     profiles: [dev]
     volumes:
       - ./frontend:/workspace
       - vscode:/root/.vscode-server
+    working_dir: /workspace
+    ports:
+      - 8080:8080
 volumes:
   vscode:
