@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
-werf compose up --dev --docker-compose-options="--profile dev"
-werf compose down --dev --docker-compose-options="--profile dev"
+werf compose down --dev --docker-compose-options="--profile dev" --docker-compose-command-options="-v"
 werf host purge --dev
 
 
@@ -17,11 +16,11 @@ mapfile -t image_ids < <(docker images --format '{{.Repository}} {{.ID}}' | grep
 
 echo "Found ${#image_ids[@]} images for project '$project_name'"
 
-if [ "${#image_ids[@]}" -gt 1 ]; then
+if [ "${#image_ids[@]}" -gt 0 ]; then
   echo "Removing old images (leaving the most recent one)..."
-  for (( i=${#image_ids[@]}-1; i>0; i-- )); do
-    echo "Removing image ID: ${image_ids[$i]}"
-        if ! output=$(docker rmi -f "${image_ids[$i]}" 2>/dev/null); then
+  for image_id in "${image_ids[@]}"; do
+    echo "Removing image ID: ${image_id}"
+        if ! output=$(docker rmi -f "${image_id}" 2>/dev/null); then
         echo "Skipping ${image_ids[$i]} due to dependencie"
         else
         echo "$output"

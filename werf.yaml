@@ -7,6 +7,7 @@ docker:
   CMD: ["sleep", "infinity"]
   EXPOSE: ["8080"]
   WORKDIR: /workspace
+  USER: app
 git:
   - add: /frontend/requirements.txt
     to: /requirements.txt
@@ -17,5 +18,6 @@ shell:
   beforeInstall:
   - apt update
   - apt install -y git
+  - useradd -m -s /bin/bash app
   install:
   - pip install -r requirements.txt --root-user-action ignore
