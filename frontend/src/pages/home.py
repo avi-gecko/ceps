@@ -1,28 +1,52 @@
 import flet as ft
-from pages.content import get_dashboard_content, get_profile_content
+import pages.page_content
 
 def get_home_view(page: ft.Page) -> ft.View:
-    content_area = ft.Container(content=get_dashboard_content(), expand=True)
+    content_area = ft.Container(expand=True)
 
-    def show_dashboard(e):
-        content_area.content = get_dashboard_content()
+    def set_content(e):
+        content = None
+        match e.control.selected_index:
+            case 0:
+                content = pages.page_content.act(page)
+            case 1:
+                content = pages.page_content.statement(page)
+            case 2:
+                content = pages.page_content.calendar(page)
+            case 3:
+                content = pages.page_content.schedule(page)
+            case _:
+                content = None
+        content_area.content = content
         page.update()
 
-    def show_profile(e):
-        content_area.content = get_profile_content()
-        page.update()
+    def logout(e):
 
-    nav_bar = ft.Row([
-        ft.ElevatedButton("Главная", on_click=show_dashboard),
-        ft.ElevatedButton("Профиль", on_click=show_profile),
-        ft.IconButton(icon=ft.icons.LOGOUT, on_click=lambda _: page.go("/")),
-    ], alignment=ft.MainAxisAlignment.CENTER)
+        page.go("/")
+
+    rail = ft.NavigationRail(
+        leading=ft.Image("mgsu.png", height=125),
+        destinations=[
+            ft.NavigationRailDestination(icon=ft.Icon(ft.Icons.CHECKLIST), label="КС-2", ),
+            ft.NavigationRailDestination(icon=ft.Icon(ft.Icons.VIEW_LIST), label="Ведомость", ),
+            ft.NavigationRailDestination(icon=ft.Icon(ft.Icons.CALENDAR_MONTH), label="Календарный"),
+            ft.NavigationRailDestination(icon=ft.Icon(ft.Icons.SCHEDULE), label="Недельно-суточный"),
+        ],
+        trailing=ft.IconButton(
+            icon=ft.Icons.LOGOUT_ROUNDED,
+            tooltip="Выход",
+            on_click=logout
+        ),
+        on_change=set_content,
+        group_alignment=-0.75
+    )
 
     return ft.View(
         route="/home",
         controls=[
-            ft.AppBar(title=ft.Text("Главная")),
-            nav_bar,
-            content_area
-        ]
+            ft.Row([rail, ft.VerticalDivider(width=1), ft.Column([content_area])], expand=True),
+        ],
+        vertical_alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        bottom_appbar=ft.BottomAppBar(ft.Text("Ильин А.В. ИЦТМС 4-5"))
     )

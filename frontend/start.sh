@@ -1,2 +1,2 @@
-#!/bin/sh
-flet run --web --port 8080 src/main.py
+#!/bin/bash
+flet run --web --port 8080 -d -r src/main.py

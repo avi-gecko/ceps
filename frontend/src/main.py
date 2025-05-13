@@ -3,7 +3,7 @@ from pages.login import get_login_view
 from pages.home import get_home_view
 
 def main(page: ft.Page):
-    page.title = "Приложение"
+    page.title = "АCУ"
     page.theme_mode = ft.ThemeMode.LIGHT
 
     def route_change(e):
@@ -18,5 +18,5 @@ def main(page: ft.Page):
 
     page.on_route_change = route_change
     page.go(page.route)
-###
+
 ft.app(main)
