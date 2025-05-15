@@ -57,7 +57,7 @@ def get_home_view(page: ft.Page) -> ft.View:
                 [
                     rail,
                     ft.VerticalDivider(width=1),
-                    ft.Column([content_area], expand=True),
+                    content_area,
                 ],
                 expand=True,
             ),

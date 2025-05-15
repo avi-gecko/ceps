@@ -3,7 +3,7 @@ import flet as ft
 entries: list[dict] = []
 
 
-def act(page: ft.Page) -> ft.Container:
+def act(page: ft.Page) -> ft.Control:
 
     def refresh_table():
         rows = []
@@ -53,23 +53,19 @@ def act(page: ft.Page) -> ft.Container:
             new_entry = {
                 "title": title_input.value,
                 "description": desc_input.value,
-                "date": date_input.value,
-                "created_by": created_by_input.value,
             }
             entries.append(new_entry)
             page.close(dlg)
             page.update()
             refresh_table()
 
-        title_input = ft.TextField(label="Название")
+        title_input = ft.TextField(label="Номер")
         desc_input = ft.TextField(label="Описание", multiline=True)
-        date_input = ft.TextField(label="Дата создания")
-        created_by_input = ft.TextField(label="Кем создано")
-
+        
         dlg = ft.AlertDialog(
             title=ft.Text("Добавить запись"),
             content=ft.Column(
-                [title_input, desc_input, date_input, created_by_input],
+                [title_input, desc_input],
                 spacing=10,
                 width=500,
                 height=250,
@@ -84,7 +80,7 @@ def act(page: ft.Page) -> ft.Container:
         page.update()
 
     columns = [
-        ft.DataColumn(ft.Text("Название")),
+        ft.DataColumn(ft.Text("Номер")),
         ft.DataColumn(ft.Text("Дата создания")),
         ft.DataColumn(ft.Text("Кем создано")),
     ]

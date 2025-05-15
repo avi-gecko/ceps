@@ -3,26 +3,34 @@ import flet as ft
 entries: list[dict] = []
 
 
-def statement(page: ft.Page) -> ft.Container:
+def statement(page: ft.Page) -> ft.Control:
 
-    def refresh_list():
-        list_view.controls.clear()
+    def refresh_table():
+        rows = []
         for entry in entries:
-            btn = ft.TextButton(
-                text=entry.get("title", "Без названия"), data=entry, on_click=open_entry
+            row = ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(entry.get("title", "Без названия"))),
+                    ft.DataCell(ft.Text(entry.get("date", ""))),
+                    ft.DataCell(ft.Text(entry.get("created_by", ""))),
+                ],
+                on_select_changed=lambda e, entry=entry: open_entry(entry),
             )
-            list_view.controls.append(btn)
+            rows.append(row)
+        table.rows = rows
         page.update()
 
-    def open_entry(e: ft.ControlEvent):
-        entry = e.control.data
+    def open_entry(entry: dict):
         dlg = ft.AlertDialog(
             title=ft.Text(entry.get("title", "Без названия")),
             content=ft.Column(
                 [
                     ft.Text(f"Описание: {entry.get('description', '')}"),
-                    ft.Text(f"Дата: {entry.get('date', '')}"),
-                ]
+                    ft.Text(f"Дата создания: {entry.get('date', '')}"),
+                    ft.Text(f"Кем создано: {entry.get('created_by', '')}"),
+                ],
+                width=500,
+                height=250,
             ),
             actions=[
                 ft.TextButton(
@@ -41,24 +49,29 @@ def statement(page: ft.Page) -> ft.Container:
         page.update()
 
     def add_entry(e: ft.ControlEvent):
-        title_input = ft.TextField(label="Название")
-        desc_input = ft.TextField(label="Описание", multiline=True)
-        date_input = ft.TextField(label="Дата")
-
         def save_entry(ev: ft.ControlEvent):
-            # Save new entry
             new_entry = {
                 "title": title_input.value,
                 "description": desc_input.value,
                 "date": date_input.value,
+                "created_by": created_by_input.value,
             }
             entries.append(new_entry)
             page.close(dlg)
-            refresh_list()
+            page.update()
+            refresh_table()
+
+        title_input = ft.TextField(label="Номер")
+        desc_input = ft.TextField(label="Описание", multiline=True)
 
         dlg = ft.AlertDialog(
             title=ft.Text("Добавить запись"),
-            content=ft.Column([title_input, desc_input, date_input]),
+            content=ft.Column(
+                [title_input, desc_input],
+                spacing=10,
+                width=500,
+                height=250,
+            ),
             actions=[
                 ft.TextButton(text="Сохранить", on_click=save_entry),
                 ft.TextButton(text="Отмена", on_click=lambda ev: page.close(dlg)),
@@ -68,26 +81,35 @@ def statement(page: ft.Page) -> ft.Container:
         page.open(dlg)
         page.update()
 
-    list_view = ft.ListView(expand=True, spacing=5, padding=10)
+    columns = [
+        ft.DataColumn(ft.Text("Номер")),
+        ft.DataColumn(ft.Text("Дата создания")),
+        ft.DataColumn(ft.Text("Кем создано")),
+    ]
+
+    table = ft.DataTable(
+        columns=columns, border=ft.border.all(1, ft.Colors.OUTLINE), expand=True
+    )
+
     add_btn = ft.ElevatedButton(
         text="Добавить запись", icon=ft.Icons.ADD, on_click=add_entry
     )
     header = ft.Text(
-        "Ведомость потребности в строительных машинах и технологической оснастке",
+        "Ведомости потребности в строительных машинах и технологической оснастке",
         theme_style=ft.TextThemeStyle.HEADLINE_LARGE,
     )
 
-    container = ft.Container(
-        content=ft.Row(
-            [
-                ft.Column([header, list_view], expand=True),
-                ft.VerticalDivider(width=1),
-                ft.Column([add_btn], alignment=ft.MainAxisAlignment.START),
-            ],
-            expand=True,
-        ),
+    refresh_table()
+
+    return ft.Row(
+        [
+            ft.Column(
+                [header, table],
+                expand=True,
+                horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
+            ),
+            ft.VerticalDivider(width=1),
+            ft.Column([add_btn], alignment=ft.MainAxisAlignment.START),
+        ],
         expand=True,
     )
-
-    refresh_list()
-    return container
