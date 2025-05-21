@@ -6,10 +6,31 @@ from: python:3.12-slim
 docker:
   CMD: ["sleep", "infinity"]
   EXPOSE: ["8080"]
-  WORKDIR: /workspace
+  WORKDIR: /workspace/frontend
   USER: app
 git:
   - add: /frontend/requirements.txt
+    to: /requirements.txt
+    stageDependencies:
+      install:
+       - requirements.txt
+shell:
+  beforeInstall:
+  - apt update
+  - apt install -y git
+  - useradd -m -s /bin/bash app
+  install:
+  - pip install -r requirements.txt --root-user-action ignore
+---
+image: backend_dev
+from: python:3.12-slim
+docker:
+  CMD: ["sleep", "infinity"]
+  EXPOSE: ["8081"]
+  WORKDIR: /workspace/backend
+  USER: app
+git:
+  - add: /backend/requirements.txt
     to: /requirements.txt
     stageDependencies:
       install:

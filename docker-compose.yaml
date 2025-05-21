@@ -1,13 +1,34 @@
 services:
+  backend_dev:
+    image: $WERF_BACKEND_DEV_DOCKER_IMAGE_NAME
+    profiles: [dev]
+    volumes:
+      - .:/workspace
+      - vscode_backend:/app/.vscode-server
+      - $HOME/.ssh/id_rsa:/app/.ssh/id_rsa
+    working_dir: /workspace/backend
+    ports:
+      - 8081:8081
   frontend_dev:
     image: $WERF_FRONTEND_DEV_DOCKER_IMAGE_NAME
     profiles: [dev]
     volumes:
       - .:/workspace
-      - vscode:/app/.vscode-server
+      - vscode_frontend:/app/.vscode-server
       - $HOME/.ssh/id_rsa:/app/.ssh/id_rsa
-    working_dir: /workspace
+    working_dir: /workspace/frontend
     ports:
       - 8080:8080
+  db_dev:
+    profiles: [dev]
+    image: postgres:17.5-alpine3.21
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - db:/var/lib/postgres
+    ports:
+      - 5432:5432
 volumes:
-  vscode:
+  vscode_frontend:
+  vscode_backend:
+  db:
