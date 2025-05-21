@@ -1,21 +1,21 @@
 services:
   backend_dev:
-    image: ${WERF_BACKEND_DEV_DOCKER_IMAGE_NAME}
+    image: "${WERF_BACKEND_DEV_DOCKER_IMAGE_NAME}"
     profiles: [dev]
     volumes:
       - .:/workspace
       - vscode_backend:/app/.vscode-server
-      - ${HOME}/.ssh/id_rsa:/app/.ssh/id_rsa
+      - "${HOME}/.ssh/id_rsa:/app/.ssh/id_rsa"
     working_dir: /workspace/backend
     ports:
       - 8081:8081
   frontend_dev:
-    image: $WERF_FRONTEND_DEV_DOCKER_IMAGE_NAME
+    image: "${WERF_FRONTEND_DEV_DOCKER_IMAGE_NAME}"
     profiles: [dev]
     volumes:
       - .:/workspace
       - vscode_frontend:/app/.vscode-server
-      - ${HOME}/.ssh/id_rsa:/app/.ssh/id_rsa
+      - "${HOME}/.ssh/id_rsa:/app/.ssh/id_rsa"
     working_dir: /workspace/frontend
     ports:
       - 8080:8080
