@@ -9,3 +9,4 @@ class User(BaseModel):
     __tablename__ = "users"
     username: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
+    is_active: Mapped[bool] = mapped_column(default=False)
