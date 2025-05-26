@@ -100,6 +100,8 @@ async def login_user(
     return TokenResponse(access_token=access_token)
 
 
-@app.get("/protected/test")
-async def test(current_user: Annotated[User, Depends(get_current_active_user)]):
+@app.get("/is_auth")
+async def is_auth(
+    current_user: Annotated[UserResponse, Depends(get_current_user)],
+):
     return current_user
