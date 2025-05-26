@@ -22,7 +22,7 @@ def get_home_view(page: ft.Page) -> ft.View:
         page.update()
 
     def logout(e):
-
+        page.client_storage.clear()
         page.go("/")
 
     rail = ft.NavigationRail(
