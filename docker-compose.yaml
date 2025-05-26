@@ -4,8 +4,8 @@ services:
     profiles: [dev]
     volumes:
       - .:/workspace
-      - vscode_backend:/app/.vscode-server
-      - "${HOME}/.ssh/id_rsa:/app/.ssh/id_rsa"
+      - vscode_backend:/home/app/.vscode-server
+      - "${HOME}/.ssh/id_rsa:/home/app/.ssh/id_rsa"
     working_dir: /workspace/backend
     ports:
       - 8081:8081
@@ -14,8 +14,8 @@ services:
     profiles: [dev]
     volumes:
       - .:/workspace
-      - vscode_frontend:/app/.vscode-server
-      - "${HOME}/.ssh/id_rsa:/app/.ssh/id_rsa"
+      - vscode_frontend:/home/app/.vscode-server
+      - "${HOME}/.ssh/id_rsa:/home/app/.ssh/id_rsa"
     working_dir: /workspace/frontend
     ports:
       - 8080:8080
