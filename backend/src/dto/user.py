@@ -1,15 +1,17 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from src.dto.base import BaseDTO
 
 
-class UserRequest(BaseModel):
+class UserRequest(BaseDTO):
     username: str = Field(..., examples=["Alex"])
     password: str = Field(..., examples=["ALEX111"])
 
 
-class UserResponse(BaseModel):
+class UserResponse(BaseDTO):
     username: str
     is_active: bool
 
 
-class TokenResponse(BaseModel):
+class TokenResponse(BaseDTO):
     access_token: str

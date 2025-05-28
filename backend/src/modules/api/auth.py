@@ -46,7 +46,7 @@ async def login_user(
     return TokenResponse(access_token=access_token)
 
 
-@router.get("/is_auth")
+@router.post("/is_auth")
 async def is_auth(
     current_user: Annotated[UserResponse, Depends(get_current_user)],
 ):
