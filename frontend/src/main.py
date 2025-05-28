@@ -15,7 +15,7 @@ def main(page: ft.Page):
         if access_token is not None:
             repos_resp = requests.post(
                 "http://ceps-backend_dev-1:8081/is_auth",
-                json={"access_token": access_token},
+                headers={"Authorization": f"Bearer {access_token}"},
             )
             if repos_resp.status_code != 200:
                 page.go("/")
