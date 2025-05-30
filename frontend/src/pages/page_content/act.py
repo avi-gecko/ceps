@@ -59,7 +59,7 @@ def act(page: ft.Page) -> ft.Control:
             page.update()
             refresh_table()
 
-        title_input = ft.TextField(label="Номер")
+        title_input = ft.TextField(label="№ п/п")
         desc_input = ft.TextField(label="Описание", multiline=True)
         
         dlg = ft.AlertDialog(
@@ -80,7 +80,7 @@ def act(page: ft.Page) -> ft.Control:
         page.update()
 
     columns = [
-        ft.DataColumn(ft.Text("Номер")),
+        ft.DataColumn(ft.Text("№ п/п")),
         ft.DataColumn(ft.Text("Дата создания")),
         ft.DataColumn(ft.Text("Кем создано")),
     ]
