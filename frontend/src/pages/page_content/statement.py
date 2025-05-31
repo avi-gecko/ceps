@@ -31,9 +31,9 @@ def statement(page: ft.Page) -> ft.Control:
         for entry in needs_machines:
             row = ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(entry.get("title", "Без названия"))),
+                    ft.DataCell(ft.Text(entry.get("id", "Без названия"))),
                     ft.DataCell(ft.Text(entry.get("date", ""))),
-                    ft.DataCell(ft.Text(entry.get("created_by", ""))),
+                    ft.DataCell(ft.Text(entry.get("who", ""))),
                 ],
                 on_select_changed=lambda e, entry=entry: open_entry(entry),
             )
@@ -214,12 +214,11 @@ def statement(page: ft.Page) -> ft.Control:
     def add_entry(e: ft.ControlEvent):
         def save_entry(ev: ft.ControlEvent):
             new_entry = {
-                "title": title_input.value,
-                "description": desc_input.value,
-                "date": date_input.value,
-                "created_by": created_by_input.value,
+                "id": 1,
+                "date": "31.05.2025",
+                "who": "user",
             }
-            having_machines.append(new_entry)
+            needs_machines.append(new_entry)
             page.close(dlg)
             page.update()
             refresh_table()
