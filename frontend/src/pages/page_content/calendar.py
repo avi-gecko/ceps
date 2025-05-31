@@ -8,16 +8,27 @@ from matplotlib.gridspec import GridSpec
 
 # Словарь для русификации сокращённых названий месяцев
 months_ru = {
-    'Jan': 'Янв', 'Feb': 'Фев', 'Mar': 'Мар', 'Apr': 'Апр',
-    'May': 'Май', 'Jun': 'Июн', 'Jul': 'Июл', 'Aug': 'Авг',
-    'Sep': 'Сен', 'Oct': 'Окт', 'Nov': 'Ноя', 'Dec': 'Дек'
+    "Jan": "Янв",
+    "Feb": "Фев",
+    "Mar": "Мар",
+    "Apr": "Апр",
+    "May": "Май",
+    "Jun": "Июн",
+    "Jul": "Июл",
+    "Aug": "Авг",
+    "Sep": "Сен",
+    "Oct": "Окт",
+    "Nov": "Ноя",
+    "Dec": "Дек",
 }
+
 
 # Форматтер, который возвращает русские сокращения месяцев
 class RussianDateFormatter(mdates.DateFormatter):
     def __call__(self, x, pos=None):
         result = super().__call__(x, pos)
         return months_ru.get(result, result)
+
 
 def calendar(page: ft.Page) -> ft.Row:
     """
@@ -35,20 +46,20 @@ def calendar(page: ft.Page) -> ft.Row:
     # --- 1. Исходные данные по задачам с доп. полями ---
     # Каждая запись: (название, месяц_старта, месяц_окончания, ед.изм., кол-во рабочих, кол-во механизмов)
     tasks = [
-        ("Подготовка территории",    1,  2, "м²", 5, 2),
-        ("Рытьё котлована",          3,  4, "м³", 8, 3),
-        ("Заливка фундамента",       5,  7, "м³", 10, 4),
-        ("Укладка кирпичей",         8,  9, "м³", 12, 5),
-        ("Установка оконных блоков",11, 12, "м³", 6,  2),
+        ("Подготовка территории", 1, 2, "м²", 5, 2),
+        ("Рытьё котлована", 3, 4, "м³", 8, 3),
+        ("Заливка фундамента", 5, 7, "м³", 10, 4),
+        ("Укладка кирпичей", 8, 9, "м³", 12, 5),
+        ("Установка оконных блоков", 11, 12, "м³", 6, 2),
     ]
     resources = {
-        "Вода":   [random.randint(10, 100) for _ in range(12)],
+        "Вода": [random.randint(10, 100) for _ in range(12)],
         "Цемент": [random.randint(10, 100) for _ in range(12)],
     }
 
     # Список дат: 1-е число каждого месяца 2025 и «следующий» месяц
     month_start_dates = [datetime.date(2025, m, 1) for m in range(1, 13)]
-    month_end_dates   = month_start_dates[1:] + [datetime.date(2026, 1, 1)]
+    month_end_dates = month_start_dates[1:] + [datetime.date(2026, 1, 1)]
 
     num_tasks = len(tasks)
     num_resources = len(resources)
@@ -56,14 +67,23 @@ def calendar(page: ft.Page) -> ft.Row:
     # --- 2. Подготовка данных для таблицы ---
     # Сокращённые заголовки (первая строка таблицы)
     col_headers = [
-        "№", "Наименование работ", "Ед.", "Раб.", "Мех.", "Дн.", "Начало", "Конец"
+        "№",
+        "Наименование работ",
+        "Ед.",
+        "Раб.",
+        "Мех.",
+        "Дн.",
+        "Начало",
+        "Конец",
     ]
     # Вторая строка — просто цифры колонок 1..8
     num_row = [str(i + 1) for i in range(len(col_headers))]
 
     # Третья и далее — реальные строки данных
     table_data = []
-    for idx, (name, start_m, end_m, unit, workers, machines) in enumerate(tasks, start=1):
+    for idx, (name, start_m, end_m, unit, workers, machines) in enumerate(
+        tasks, start=1
+    ):
         d0 = month_start_dates[start_m - 1]
         d1 = month_end_dates[end_m - 1]
         duration_days = (d1 - d0).days
@@ -75,7 +95,7 @@ def calendar(page: ft.Page) -> ft.Row:
             str(workers),
             str(machines),
             f"{duration_days}",
-            d0.strftime("%d.%m.%y"),   # Сокращённый формат даты
+            d0.strftime("%d.%m.%y"),  # Сокращённый формат даты
             end_real.strftime("%d.%m.%y"),
         ]
         table_data.append(row)
@@ -88,12 +108,12 @@ def calendar(page: ft.Page) -> ft.Row:
     gs = GridSpec(
         nrows=total_rows,
         ncols=2,
-        width_ratios=[1.3, 3],              # доля ширины: таблица vs графики
+        width_ratios=[1.3, 3],  # доля ширины: таблица vs графики
         height_ratios=[num_tasks + 2] + [1] * num_resources,
         # ↑↑ height_ratios[0] = num_tasks + 2, т.к. у нас две «пустых» строки вверху Ганта
         wspace=0.05,
         hspace=0.3,
-        figure=fig
+        figure=fig,
     )
 
     # === 3.1 Ось для таблицы (в gs[0,0]) ===
@@ -104,9 +124,9 @@ def calendar(page: ft.Page) -> ft.Row:
     full_table = [col_headers] + [num_row] + table_data
     table = plt.table(
         cellText=full_table,
-        cellLoc='center',
-        loc='center',
-        bbox=[0, 0, 1, 1]   # занимает весь axes[0,0]
+        cellLoc="center",
+        loc="center",
+        bbox=[0, 0, 1, 1],  # занимает весь axes[0,0]
     )
 
     # ВОССТАНАВЛИВАЕМ автоматическое задание ширины колонок:
@@ -125,10 +145,10 @@ def calendar(page: ft.Page) -> ft.Row:
         # row = 0..(total_table_rows-1), col = 0..(len(col_headers)-1)
         cell.set_height(row_height)
         cell.set_linewidth(0.5)
-        cell.set_edgecolor('gray')
+        cell.set_edgecolor("gray")
         # Для header (row == 0) — делаем текст жирным:
         if row == 0:
-            cell.set_text_props(weight='bold')
+            cell.set_text_props(weight="bold")
         # Для data-строк (row >= 2) — включаем перенос текста:
         if row >= 2:
             cell.set_text_props(wrap=True)
@@ -137,16 +157,16 @@ def calendar(page: ft.Page) -> ft.Row:
     ax_gantt = fig.add_subplot(gs[0, 1])
 
     # Рисуем две «пустые» строки (y = 0 и y = 1), а сами задачи — по y = 2..(num_tasks+1)
-    for i, (name, start_m, end_m, *_ ) in enumerate(tasks):
+    for i, (name, start_m, end_m, *_) in enumerate(tasks):
         d0 = month_start_dates[start_m - 1]
         d1 = month_end_dates[end_m - 1]
         ax_gantt.barh(
-            y=i + 2,                 # сдвиг «на две» строки вверх
+            y=i + 2,  # сдвиг «на две» строки вверх
             width=(d1 - d0).days,
             left=d0,
-            height=0.6,              # чуть уже, чтобы между рядами была щель
+            height=0.6,  # чуть уже, чтобы между рядами была щель
             color="skyblue",
-            edgecolor="black"
+            edgecolor="black",
         )
 
     ax_gantt.set_yticks([])  # Убираем метки на оси Y
@@ -181,7 +201,7 @@ def calendar(page: ft.Page) -> ft.Row:
                 width=(d1 - d0).days,
                 align="edge",
                 color="lightgreen",
-                edgecolor="black"
+                edgecolor="black",
             )
         unit_res = "м³" if res == "Вода" else "кг"
         ax.set_ylabel(f"{res} ({unit_res})", fontsize=10)
